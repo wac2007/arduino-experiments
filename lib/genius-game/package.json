@@ -1,0 +1,13 @@
+{
+  "name": "genius-game",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "j5-songs": "^0.0.9",
+    "johnny-five": "^1.0.0"
+  }
+}
