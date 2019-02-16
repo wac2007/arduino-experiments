@@ -6,6 +6,7 @@ const {
   STATE_INIT,
   STATE_GET_NEW_CHALLENGE,
   STATE_SHOW_CHALLENGE,
+  STATE_CHECK_USER_INPUT,
   STATE_WAIT_USER_INPUT,
   STATE_IDLE,
 } = require('./states');
@@ -33,20 +34,23 @@ let currentState = STATE_INIT;
 let stepCount;
 let stepCheck;
 
-const onButtonDown = (color) => ()  => {
-  console.log('Checking step', stepCheck);
-  console.log('Apertou: ', color.name);
+const gameOver = () => {
+  console.log('####################################');
+  console.log('############ GAME OVER #############');
+  console.log('####################################');
+  currentState = STATE_INIT;
+};
 
-  const correct = challengeCheck(challenge, stepCheck, color);
-  console.log('IsCorrect?', correct);
-  if (correct) {
-    stepCheck++;
-    currentState = STATE_WAIT_USER_INPUT;
-  } else {
-    console.log('####################################');
-    console.log('############ GAME OVER #############');
-    console.log('####################################');
-    currentState = STATE_INIT;
+const onButtonDown = (color) => ()  => {
+  if (currentState === STATE_WAIT_USER_INPUT) {
+    const correct = challengeCheck(challenge, stepCheck, color);
+    console.log('IsCorrect?', correct);
+    if (correct) {
+      stepCheck++;
+      currentState = STATE_CHECK_USER_INPUT;
+    } else {
+      gameOver();
+    }
   }
 };
 
@@ -66,7 +70,6 @@ board.on("ready", function() {
   this.loop(500, () => {
     switch (currentState) {
       case STATE_INIT:
-
         COLORS.forEach(color => {
           color.button.removeAllListeners('down');
           color.button.on('down', onButtonDown(color));
@@ -87,14 +90,14 @@ board.on("ready", function() {
         stepCheck = 0;
         console.log('## SHOW CHALLENGE');
         blinkChallenge(challenge, BASE_BLINK);
-        currentState = STATE_WAIT_USER_INPUT;
+        currentState = STATE_CHECK_USER_INPUT;
         break;
 
-      case STATE_WAIT_USER_INPUT:
+      case STATE_CHECK_USER_INPUT:
         console.log('## Wait for Input', stepCheck, stepCount);
         if (stepCheck <= stepCount) {
           console.log('### NEW ROUND');
-          currentState = STATE_IDLE;
+          currentState = STATE_WAIT_USER_INPUT;
         } else {
           console.log('### Acertou tudo!');
           stepCount++;

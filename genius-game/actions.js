@@ -34,7 +34,6 @@ const blinkChallenge = (challenge, blinkTime) => {
     setTimeout(() => {
       color.led.on(blinkTime);
       setTimeout(() => {
-        // color.led.stop();
         color.led.off();
       }, blinkTime);
     }, (index * (blinkTime * 2)) + interval);
