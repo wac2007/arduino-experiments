@@ -16,7 +16,8 @@ const {
   blinkStart,
   blinkEnd,
   blinkChallenge,
-  challengeCheck
+  challengeCheck,
+  blinkClick,
 } = require('./actions');
 
 
@@ -44,6 +45,7 @@ const gameOver = () => {
 
 const onButtonDown = (color) => ()  => {
   if (currentState === STATE_WAIT_USER_INPUT) {
+    blinkClick(color, BASE_BLINK / 2);
     const correct = challengeCheck(challenge, stepCheck, color);
     console.log('IsCorrect?', correct);
     if (correct) {

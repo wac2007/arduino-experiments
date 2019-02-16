@@ -38,6 +38,13 @@ const blinkChallenge = (challenge, blinkTime, interval) => {
   });
 };
 
+const blinkClick = (color, blinkTime) => {
+  color.led.on();
+  setTimeout(() => {
+    color.led.off();
+  }, blinkTime);
+};
+
 const challengeCheck = (challenge, position, colorPressed) =>
   (challenge[position].name === colorPressed.name);
 
@@ -47,5 +54,6 @@ module.exports = {
   blinkStart,
   blinkEnd,
   blinkChallenge,
-  challengeCheck
+  challengeCheck,
+  blinkClick
 }
