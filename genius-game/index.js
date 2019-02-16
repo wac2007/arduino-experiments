@@ -18,10 +18,13 @@ const {
   blinkChallenge,
   challengeCheck,
   blinkClick,
+  playSound,
 } = require('./actions');
 
-
 const board = new five.Board();
+
+const SOUND_ON = true;
+const PIEZO_PIN = 13;
 
 const BASE_BLINK = 500;
 const FULL_BLINK = BASE_BLINK * 2;
@@ -35,6 +38,7 @@ let challenge;
 let currentState = STATE_INIT; 
 let stepCount;
 let stepCheck;
+let piezo;
 
 const gameOver = () => {
   console.log('####################################');
@@ -43,9 +47,13 @@ const gameOver = () => {
   currentState = STATE_INIT;
 };
 
-const onButtonDown = (color) => ()  => {
+const onButtonDown = (color, piezo) => ()  => {
+  if (piezo) {
+    playSound(piezo, color.sound);
+  }
   if (currentState === STATE_WAIT_USER_INPUT) {
     blinkClick(color, BASE_BLINK / 2);
+    
     const correct = challengeCheck(challenge, stepCheck, color);
     console.log('IsCorrect?', correct);
     if (correct) {
@@ -70,12 +78,16 @@ board.on("ready", function() {
   COLORS = configLeds(COLORS);
   COLORS = configButtons(COLORS);
 
+  if (SOUND_ON) {
+    piezo = new five.Piezo(PIEZO_PIN);
+  }
+
   this.loop(500, () => {
     switch (currentState) {
       case STATE_INIT:
         COLORS.forEach(color => {
           color.button.removeAllListeners('down');
-          color.button.on('down', onButtonDown(color));
+          color.button.on('down', onButtonDown(color, piezo));
         });
         stepCount = 0;
         stepCheck = 0;
@@ -92,7 +104,7 @@ board.on("ready", function() {
       case STATE_SHOW_CHALLENGE:
         stepCheck = 0;
         console.log('## SHOW CHALLENGE');
-        blinkChallenge(challenge, BASE_BLINK, BLINK_INTERVAL);
+        blinkChallenge(challenge, BASE_BLINK, BLINK_INTERVAL, piezo);
         currentState = STATE_CHECK_USER_INPUT;
         break;
 
@@ -112,6 +124,8 @@ board.on("ready", function() {
 
   this.repl.inject({
     COLORS,
-    challenge
+    challenge,
+    piezo,
+    playSound,
   });
 });

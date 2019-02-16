@@ -5,6 +5,7 @@ module.exports = [
     ledPin: 4,
     led: null,
     button: null,
+    sound: 'e1'
   },
   {
     name: 'yellow',
@@ -12,7 +13,7 @@ module.exports = [
     ledPin: 5,
     led: null,
     button: null,
-
+    sound: 'd4'
   },
   {
     name: 'green',
@@ -20,6 +21,6 @@ module.exports = [
     ledPin: 6,
     led: null,
     button: null,
-
+    sound: 'f4'
   },
 ];

@@ -13,6 +13,15 @@ const configButtons = (colors) => colors.map(color => ({
   })
 }));
 
+const playSound = (piezo, sound) => {
+  piezo.play({
+    song: [
+      [sound, 1 / 4 ],
+    ],
+    tempo: 100
+  });
+};
+
 const blinkStart = (colors, blinkTime) => {
   colors.forEach(color => {
     color.led.blink(blinkTime);
@@ -26,11 +35,14 @@ const blinkEnd = (colors) => {
   });
 };
 
-const blinkChallenge = (challenge, blinkTime, interval) => {
+const blinkChallenge = (challenge, blinkTime, interval, piezo) => {
   challenge.forEach((color, index) => {
     console.log('BLINKING:', color.name);
     setTimeout(() => {
       color.led.on(blinkTime);
+      if (piezo) {
+        playSound(piezo, color.sound);
+      }
       setTimeout(() => {
         color.led.off();
       }, blinkTime);
@@ -55,5 +67,6 @@ module.exports = {
   blinkEnd,
   blinkChallenge,
   challengeCheck,
-  blinkClick
+  blinkClick,
+  playSound,
 }
