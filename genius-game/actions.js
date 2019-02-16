@@ -13,9 +13,9 @@ const configButtons = (colors) => colors.map(color => ({
   })
 }));
 
-const blinkStart = (colors) => {
+const blinkStart = (colors, blinkTime) => {
   colors.forEach(color => {
-    color.led.blink(500);
+    color.led.blink(blinkTime);
   });
 };
 
@@ -26,9 +26,7 @@ const blinkEnd = (colors) => {
   });
 };
 
-const blinkChallenge = (challenge, blinkTime) => {
-  const interval = 500;
-
+const blinkChallenge = (challenge, blinkTime, interval) => {
   challenge.forEach((color, index) => {
     console.log('BLINKING:', color.name);
     setTimeout(() => {

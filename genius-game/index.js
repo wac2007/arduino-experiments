@@ -24,6 +24,7 @@ const board = new five.Board();
 
 const BASE_BLINK = 500;
 const FULL_BLINK = BASE_BLINK * 2;
+const BLINK_INTERVAL = 500;
 
 const INIT_BLINK_TIME = FULL_BLINK * 2;
 
@@ -55,7 +56,7 @@ const onButtonDown = (color) => ()  => {
 };
 
 const initialBlink = () => {
-  blinkStart(COLORS);
+  blinkStart(COLORS, BASE_BLINK);
   setTimeout(() => {
     blinkEnd(COLORS);
     currentState = STATE_GET_NEW_CHALLENGE;
@@ -89,7 +90,7 @@ board.on("ready", function() {
       case STATE_SHOW_CHALLENGE:
         stepCheck = 0;
         console.log('## SHOW CHALLENGE');
-        blinkChallenge(challenge, BASE_BLINK);
+        blinkChallenge(challenge, BASE_BLINK, BLINK_INTERVAL);
         currentState = STATE_CHECK_USER_INPUT;
         break;
 
