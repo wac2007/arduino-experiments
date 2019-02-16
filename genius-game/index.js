@@ -1,0 +1,120 @@
+const five = require('johnny-five');
+
+const { randomizr } = require('./helpers');
+const colors = require('./colors');
+const {
+  STATE_INIT,
+  STATE_GET_NEW_CHALLENGE,
+  STATE_SHOW_CHALLENGE,
+  STATE_WAIT_USER_INPUT,
+  STATE_IDLE,
+} = require('./states');
+const {
+  configLeds,
+  configButtons,
+  blinkStart,
+  blinkEnd,
+  blinkChallenge,
+  challengeCheck
+} = require('./actions');
+
+
+const board = new five.Board({
+  //  repl: false,
+});
+
+const BASE_BLINK = 500;
+const FULL_BLINK = BASE_BLINK * 2;
+
+const INIT_BLINK_TIME = FULL_BLINK * 2;
+
+let COLORS = colors;
+
+let challenge;
+let currentState = STATE_INIT; 
+let stepCount;
+let stepCheck;
+
+const onButtonDown = (color) => ()  => {
+  console.log('Checking step', stepCheck);
+  console.log('Apertou: ', color.name);
+
+  const correct = challengeCheck(challenge, stepCheck, color);
+  console.log('IsCorrect?', correct);
+  if (correct) {
+    stepCheck++;
+    currentState = STATE_WAIT_USER_INPUT;
+  } else {
+    console.log('####################################');
+    console.log('############ GAME OVER #############');
+    console.log('####################################');
+    currentState = STATE_INIT;
+  }
+  // color.button.removeAllListeners('down');
+};
+
+const initialBlink = () => {
+  blinkStart(COLORS);
+  setTimeout(() => {
+    blinkEnd(COLORS);
+    currentState = STATE_GET_NEW_CHALLENGE;
+  }, INIT_BLINK_TIME);
+  currentState = STATE_IDLE;
+};
+
+board.on("ready", function() {
+  COLORS = configLeds(COLORS);
+  COLORS = configButtons(COLORS);
+
+  setTimeout(() => {
+    // Here is a bug to bind button event, need to encapsulate on setTimeout
+    
+  }, 100);
+
+  this.loop(500, () => {
+    switch (currentState) {
+      case STATE_INIT:
+
+        COLORS.forEach(color => {
+          color.button.removeAllListeners('down');
+          color.button.on('down', onButtonDown(color));
+        });
+        stepCount = 0;
+        stepCheck = 0;
+        challenge = [];
+        initialBlink();
+        break;
+
+      case STATE_GET_NEW_CHALLENGE:
+        const number = randomizr(0, 3);
+        challenge.push(COLORS[number]);
+        currentState = STATE_SHOW_CHALLENGE;
+        break;
+
+      case STATE_SHOW_CHALLENGE:
+        stepCheck = 0;
+        console.log('## SHOW CHALLENGE');
+        blinkChallenge(challenge, BASE_BLINK);
+        currentState = STATE_WAIT_USER_INPUT;
+        break;
+
+      case STATE_WAIT_USER_INPUT:
+        // Se tiver mais algo pra conferir
+        console.log('## Wait for Input', stepCheck, stepCount);
+        if (stepCheck <= stepCount) {
+          console.log('### NEW ROUND');
+          currentState = STATE_IDLE;
+        } else {
+          console.log('### Acertou tudo!');
+          stepCount++;
+          currentState = STATE_GET_NEW_CHALLENGE;
+        }
+        break;
+    }
+  });
+
+  this.repl.inject({
+    COLORS,
+    challenge
+  });
+});

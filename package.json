@@ -1,0 +1,14 @@
+{
+  "name": "arduino-experiments",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "genius": "node genius-game/index.js"
+  },
+  "dependencies": {
+    "johnny-five": "^1.0.0",
+    "temporal": "^0.7.1"
+  }
+    
+}
