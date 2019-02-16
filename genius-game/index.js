@@ -19,9 +19,7 @@ const {
 } = require('./actions');
 
 
-const board = new five.Board({
-  //  repl: false,
-});
+const board = new five.Board();
 
 const BASE_BLINK = 500;
 const FULL_BLINK = BASE_BLINK * 2;
@@ -50,7 +48,6 @@ const onButtonDown = (color) => ()  => {
     console.log('####################################');
     currentState = STATE_INIT;
   }
-  // color.button.removeAllListeners('down');
 };
 
 const initialBlink = () => {
@@ -65,11 +62,6 @@ const initialBlink = () => {
 board.on("ready", function() {
   COLORS = configLeds(COLORS);
   COLORS = configButtons(COLORS);
-
-  setTimeout(() => {
-    // Here is a bug to bind button event, need to encapsulate on setTimeout
-    
-  }, 100);
 
   this.loop(500, () => {
     switch (currentState) {
@@ -99,7 +91,6 @@ board.on("ready", function() {
         break;
 
       case STATE_WAIT_USER_INPUT:
-        // Se tiver mais algo pra conferir
         console.log('## Wait for Input', stepCheck, stepCount);
         if (stepCheck <= stepCount) {
           console.log('### NEW ROUND');
