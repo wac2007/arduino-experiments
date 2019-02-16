@@ -1,4 +1,5 @@
 const five = require('johnny-five');
+const songs = require('j5-songs');
 
 const configLeds = (colors) => colors.map(color => ({
   ...color,
@@ -16,9 +17,28 @@ const configButtons = (colors) => colors.map(color => ({
 const playSound = (piezo, sound) => {
   piezo.play({
     song: [
-      [sound, 1 / 4 ],
+      [sound, 1/4]
     ],
-    tempo: 100
+    tempo: 100,
+  });
+};
+
+const startSound = (piezo) => {
+  const song = songs.load('mario-intro');
+  piezo.play(song);
+};
+
+const gameOverSound = (piezo) => {
+  piezo.play({
+    song: [
+      ['d8', 1/4],
+      [null, 1/4],
+      ['d8', 1/4],
+      [null, 1/4],
+      ['d8', 1/4],
+      [null, 1/4],
+    ],
+    tempo: 200
   });
 };
 
@@ -69,4 +89,6 @@ module.exports = {
   challengeCheck,
   blinkClick,
   playSound,
+  startSound,
+  gameOverSound,
 }

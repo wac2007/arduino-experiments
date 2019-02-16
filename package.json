@@ -7,8 +7,8 @@
     "genius": "node genius-game/index.js"
   },
   "dependencies": {
+    "j5-songs": "^0.0.9",
     "johnny-five": "^1.0.0",
     "temporal": "^0.7.1"
   }
-    
 }

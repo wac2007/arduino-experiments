@@ -708,6 +708,11 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
+j5-songs@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/j5-songs/-/j5-songs-0.0.9.tgz#ad8e19707e0c66f7694091da92957fc9fddc2bc6"
+  integrity sha1-rY4ZcH4MZvdpQJHakpV/yf3cK8Y=
+
 johnny-five@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/johnny-five/-/johnny-five-1.0.0.tgz#be0e82cd88a8736c5ec1c6e78e44069c4ff0acc7"

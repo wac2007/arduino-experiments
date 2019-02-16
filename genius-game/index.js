@@ -19,12 +19,14 @@ const {
   challengeCheck,
   blinkClick,
   playSound,
+  startSound,
+  gameOverSound,
 } = require('./actions');
 
 const board = new five.Board();
 
 const SOUND_ON = true;
-const PIEZO_PIN = 13;
+const PIEZO_PIN = 3;
 
 const BASE_BLINK = 500;
 const FULL_BLINK = BASE_BLINK * 2;
@@ -45,6 +47,7 @@ const gameOver = () => {
   console.log('############ GAME OVER #############');
   console.log('####################################');
   currentState = STATE_INIT;
+  gameOverSound(piezo);
 };
 
 const onButtonDown = (color, piezo) => ()  => {
@@ -80,6 +83,7 @@ board.on("ready", function() {
 
   if (SOUND_ON) {
     piezo = new five.Piezo(PIEZO_PIN);
+    startSound(piezo);
   }
 
   this.loop(500, () => {
